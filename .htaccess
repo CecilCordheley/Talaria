@@ -1,0 +1,14 @@
+Options +FollowSymlinks
+RewriteEngine On
+#RewriteBase /
+
+#rewrite connexion
+RewriteRule ^connexion$ root.php?root=connexion [L]
+#rewrite fisrtConnexion
+RewriteRule ^firstConnexion$ root.php?root=firstConnexion [L]
+#rewrite updatePassword
+RewriteRule ^updatePassword$ root.php?root=updatePassword [L]
+#rewrite deconnexion
+RewriteRule ^deconnexion$ root.php?root=deconnexion [L]
+#rewrite userManager
+RewriteRule ^userManager$ user.php [L]
