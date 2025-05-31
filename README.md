@@ -61,3 +61,4 @@ Pour échanger ou collaborer : [LinkedIn](https://www.linkedin.com/in/s%C3%A9bas
 Projet en phase de test, publié en accès libre. Licence à définir pour la version stable.
 
 ---
+

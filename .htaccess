@@ -12,3 +12,8 @@ RewriteRule ^updatePassword$ root.php?root=updatePassword [L]
 RewriteRule ^deconnexion$ root.php?root=deconnexion [L]
 #rewrite userManager
 RewriteRule ^userManager$ user.php [L]
+RewriteRule ^seeAgent_(.*?)$ index.php?act=seeAgent&id=$1 [L]
+#rewrite Licence
+RewriteRule ^Licence$ licence.php [L]
+#rewrite useLicence
+RewriteRule ^useLicence$ licence.php?act=use [L]

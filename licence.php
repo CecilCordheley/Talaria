@@ -11,10 +11,6 @@ EasyFrameWork::INIT("./vendor/easyFrameWork/Core/config/config.json");
 Autoloader::register();
 $router = new Router();
 //Ici Insérez les routes
-$router->addRoute('', 'indexController');
-$router->addRoute('index.php', 'indexController');
-if(isset($_GET["id"])){
-    $router->addRoute('seeAgent_'.$_GET["id"], 'indexController');
-}
-//$router->addRoute('index.php', 'indexController');
+$router->addRoute('Licence', 'licenceController');
+$router->addRoute('useLicence', 'licenceController');
 $router->route($_SERVER["REQUEST_URI"],["year"=>date("Y")]);
