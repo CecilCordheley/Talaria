@@ -1,0 +1,8 @@
+import MiscFunction;
+request{
+    $idTicket=required_get("id");
+    $state=required_get("state");
+    $comment=$_GET["comment"]??"";
+    if(MiscFunction::setStateTicket($idTicket,$state,$comment))
+        success("Ok");
+}

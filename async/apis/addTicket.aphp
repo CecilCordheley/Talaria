@@ -1,0 +1,10 @@
+import MiscFunction;
+request{
+    $obj=required_post("objet");
+    $type=required_post("type");
+    $service=required_post("service",false,false);
+    $content=required_post("content");
+    $data=required_post("data");
+    if(MiscFunction::addTicket(htmlentities($obj),$service,$type,htmlentities($content),$data))
+        success("Ok");
+}

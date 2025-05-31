@@ -1,0 +1,5 @@
+import MiscFunction;
+request getTicketFromService{
+    $id=required_get("service");
+   return MiscFunction::getTicketFrom($id);
+}

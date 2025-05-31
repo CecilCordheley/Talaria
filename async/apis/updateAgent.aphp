@@ -1,0 +1,12 @@
+import MiscFunction;
+request{
+    $id=required_get("id");
+     $nom=required_post("nom");
+    $prenom=required_post("prenom");
+    $service=required_post("service");
+    $mail=required_post("mail");
+    $Blocked=required_post("blocage");
+    $agent=["NOM"=>$nom,"PRENOM"=>$prenom,"SERVICE"=>$service,"MAIL"=>$mail,"BLOCKAGE"=>$Blocked];
+    if(MiscFunction::updateAgent($id,$agent))
+        success("Ok");
+}

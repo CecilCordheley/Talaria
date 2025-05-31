@@ -1,0 +1,8 @@
+import MiscFunction;
+request{
+    $id=required_get("id");
+    $t=required_post("ticket");
+    if(MiscFunction::updateTicket($id,$t["objetTicket"],$t["contentTicket"],$t["dataTicket"]))
+        success("Ok");
+    
+}

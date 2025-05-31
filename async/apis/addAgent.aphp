@@ -1,0 +1,11 @@
+import MiscFunction;
+request{
+     $nom=required_post("nom");
+    $prenom=required_post("prenom");
+    $service=required_post("service");
+    $type=required_post("type");
+    $mail=required_post("mail");
+    $ref=required_post("ref");
+    if($agent=MiscFunction::addAgent($nom,$prenom,$mail,$ref,$type,$service))
+        success("Ok",$agent);
+}

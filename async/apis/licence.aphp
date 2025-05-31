@@ -1,0 +1,14 @@
+import MiscFunction;
+request use{
+   $uuid=required_get("uuid");
+   $idCible=required_post("cible");
+   $type_cible=required_post("type_cible");
+   $commentaire=required_post("comment");
+   $action=required_post("action");
+   $param=required_post("params");
+   if(MiscFunction::useLicence($uuid,$idCible,$type_cible,$commentaire,$action,json_decode($param)))
+    success("Licence ".$uuid." utilisée");
+}
+request foo{
+    success("FOO");
+}

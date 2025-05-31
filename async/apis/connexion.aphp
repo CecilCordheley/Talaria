@@ -1,0 +1,8 @@
+import Connexion;
+request{
+    $pwd=required_post("mdp");
+    $mail=required_post("mail");
+    $connProc=new connexion($mail,$pwd);
+    if($connProc->handle())
+        success("connexion : ok");
+}

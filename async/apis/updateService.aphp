@@ -1,0 +1,7 @@
+import MiscFunction;
+request{
+    $id=required_get("id");
+     $serv=required_post("service");
+    if(MiscFunction::updateService($id,json_decode($serv,true)))
+        success("Ok");
+}

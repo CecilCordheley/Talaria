@@ -1,0 +1,6 @@
+import sayHello;
+request{
+    $i=required_get("val");
+    $h=new sayHello();
+    success($h->handle($i));
+}

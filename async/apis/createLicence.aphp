@@ -1,0 +1,7 @@
+import MiscFunction;
+request{
+    $idAgent=required_get("agent");
+    $auto=required_get("auto");
+    if($licence=MiscFunction::createLicence($idAgent,$auto))
+        success("Ok",$licence);
+}

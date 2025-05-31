@@ -1,0 +1,9 @@
+import MiscFunction;
+request{
+    $id=required_get("id");
+    $service=required_get("service");
+    $prio=required_get("prio");
+
+    if(MiscFunction::requalifTicket($id,$service,$prio))
+        success("Ok");
+}
