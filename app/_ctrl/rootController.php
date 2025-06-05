@@ -19,9 +19,29 @@ class rootController extends Controller{
     private SQLFactory $sQLFactory;
     public function __construct(){
         parent::__construct();
-        
+       
         $this->sQLFactory=new SQLFactory();
-        $this->cmd=[
+        
+         $this->cmd=[
+            "importAgent"=>function($template){
+               
+            $sessionManager=EasyGlobal::createSessionManager();
+         $u=Main::fixObject($sessionManager->get("user",SessionManager::PUBLIC_CONTEXT),"SQLEntities\AgentEntity");
+        
+                $template->remplaceTemplate("MainContent","importAgent.tpl");
+                $this->setData("user",$u[0]->getArray());
+        //         $u=Main::fixObject($sessionManager->get("user",SessionManager::PUBLIC_CONTEXT),"SQLEntities\AgentEntity");
+            //    $this->setData("user",$u[0]->getArray());
+                 $JsLib=["1"=>["adminBehav.js"],"2"=>["managerBehav.js"],"3"=>["agentBehav.js"]];
+                 $template->getRessourceManager()->addScript("public/js/actions.js");
+            $template->getRessourceManager()->addScript("public/js/async.js");
+            $template->getRessourceManager()->addScript("public/js/main.js");
+            
+            foreach($JsLib["2"] as $lib){
+                $this->setData("moduleScript","public/js/$lib");
+            }
+        
+            },
             "updatePassword"=>function($template){
                 $mail=$_POST["mailchecker"];
                 $mdp=$_POST["pwdChecker"];
@@ -108,6 +128,7 @@ class rootController extends Controller{
             EasyFrameWork::Debug($_GET);
            }
         }
+ //       EasyFrameWork::Debug($this->getData());
         $template->setVariables($this->getData());
         // Rendre le template
         $template->render();

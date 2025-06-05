@@ -5,7 +5,6 @@ var currentAgent = null;
 var currentService = null;
 
 window.addEventListener("load", function () {
-
     initComponentLib();
     document.getElementById("createLicence")?.addEventListener("click", function () {
         let agent=document.getElementById("agentNewLicence").value;
@@ -103,8 +102,9 @@ window.addEventListener("load", function () {
                 //get ID
                 let id = this.getAttribute("idAgent");
                 getAgent(id, (data) => {
+                    currentAgent = data.agent;
                     seeAgent(data.agent);
-                    setEditableField(document.querySelectorAll(".editable"));
+                    setEditableField(document.querySelectorAll(".editable"),"agent",createSelectCompoment);
                 })
             }
         })

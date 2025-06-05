@@ -26,6 +26,11 @@ EasyFrameWork::INIT("../vendor/easyFrameWork/Core/config/config.json");
 Autoloader::register();
 //EasyFrameWork::showClasses();
 $cmds=[
+    "stat"=>function(){
+        $transpiler = new AjaxPHPTranspiler(__DIR__,"Stat_fnc",true);
+         $transpiler->setAction($_GET["action"]);
+ $transpiler->run();
+    },
     "ticketFnc"=>function(){
 $transpiler = new AjaxPHPTranspiler(__DIR__,"TicketFnc",true);
  $transpiler->setAction($_GET["action"]);

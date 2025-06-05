@@ -7,7 +7,7 @@
                 <th>UUID</th>
                 <th>REF</th>
                 <th>Nom Prénom</th>
-                 <th>Service</th>
+                <th>Service</th>
                 <th>Actions</th>
             </tr>
             {LOOP:userList}
@@ -16,7 +16,7 @@
                 <td>{#uuidAgent#}</td>
                 <td>{#refAgent#}</td>
                 <td>{#NomAgent#} {#PrenomAgent#}</td>
-                 <td>{#libService#}</td>
+                <td>{#libService#}</td>
                 <td>actions</td>
             </tr>
             {/LOOP}
@@ -108,6 +108,32 @@
         A simple dark alert—check it out!
     </div>
 </div>
+<div class="modal fade" id="export" tabindex="-1" aria-labelledby="export" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="export">Exportation</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <a href="./export_agent">Agent</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="./export_ticketFrom">Tickets d'origine</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="./export_ticketTo">Tickets destinataires</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="Licence" tabindex="-1" aria-labelledby="Licence" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -129,7 +155,8 @@
                             <tr>
                                 <td>{#uuidLicence#}</td>
                                 <td>{#estActive#}</td>
-                                <td><button class="btn btn-primary" name="useLicence" idLicence="{#uuidLicence#}">Utiliser</button></td>
+                                <td><button class="btn btn-primary" name="useLicence"
+                                        idLicence="{#uuidLicence#}">Utiliser</button></td>
                             </tr>
                             {/LOOP}
                         </table>
@@ -209,7 +236,8 @@
                         <label for="idservice" class="form-label">Service</label>
                         <select name="select_service" id="idservice" class="form-select">
                             <option value="NULL">Séléctionnez un service</option>
-                            {LOOP:SQL("SELECT * FROM service WHERE idService={var:user.service} OR parent_service={var:user.service}")}
+                            {LOOP:SQL("SELECT * FROM service WHERE idService={var:user.service} OR
+                            parent_service={var:user.service}")}
                             <option value="{#idService#}">{#libService#}</option>
                             {/LOOP}
                         </select>
@@ -278,24 +306,24 @@
     </div>
 </div>
 <script>
-   function addParam(param){
-    let container=document.getElementById("LicenceParams");
-    param.forEach(p=>{
-        let line=document.createElement("div");
-        line.setAttribute("name","licence_param");
-        let label=document.createElement("label");
-        label.classList.add("form-label");
-        label.innerText=p.name;
-        let input=document.createElement("input");
-        input.classList.add("form-control");
-        input.setAttribute("licenceparam_name",p.name);
-        input.type=p.type;
-        line.appendChild(label);
-        line.append(input);
-        container.appendChild(line);
-    })
-   }
-     document.querySelector("#TypeCible").onchange = function () {
+    function addParam(param) {
+        let container = document.getElementById("LicenceParams");
+        param.forEach(p => {
+            let line = document.createElement("div");
+            line.setAttribute("name", "licence_param");
+            let label = document.createElement("label");
+            label.classList.add("form-label");
+            label.innerText = p.name;
+            let input = document.createElement("input");
+            input.classList.add("form-control");
+            input.setAttribute("licenceparam_name", p.name);
+            input.type = p.type;
+            line.appendChild(label);
+            line.append(input);
+            container.appendChild(line);
+        })
+    }
+    document.querySelector("#TypeCible").onchange = function () {
         let sel = document.querySelector("#idCible");
         sel.innerHTML = "";
         let actionLicence = document.querySelector('#actionLicence');
@@ -306,23 +334,23 @@
                 opt.value = act.name;
                 opt.innerText = act.name;
                 actionLicence.appendChild(opt);
-                actionLicence.onchange=function(){
-                    if(act.param!=undefined){
+                actionLicence.onchange = function () {
+                    if (act.param != undefined) {
                         addParam(act.param);
                     }
                 }
             })
         });
         switch (this.value) {
-            case "ticket":{
-                getTicket(1,{var:user.service},(data)=>{
-                     data.forEach(ticket => {
+            case "ticket": {
+                getTicket(1, { var: user.service }, (data) => {
+                    data.forEach(ticket => {
                         let opt = document.createElement('option');
                         opt.value = ticket.idTicket;
                         opt.innerText = ticket.RefTicket;
                         sel.appendChild(opt);
                     })
-                },(error)=>{
+                }, (error) => {
                     console.error(error);
                 })
                 break;

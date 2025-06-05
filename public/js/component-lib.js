@@ -4,7 +4,7 @@ export function initComponentLib() {
         "console": document.getElementById("console"),
         "nav": document.querySelectorAll("[data-nav-target]"),
         "assignAgent": document.querySelector("[name=assignAgent]"),
-        "validTicket": document.querySelector("[name=validTicket]"),
+        "validTicket": document.querySelectorAll("[name=validTicket]"),
         "updateTicket": document.querySelector("[name=updateTicket]"),
         "addData": document.getElementById("addData"),
         "addAgent": document.getElementById("addAgent"),

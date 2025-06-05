@@ -163,8 +163,26 @@ window.addEventListener("load", function () {
     currentLicence = null;
     initComponentLib();
     resetTab();
-    document.querySelector("#useLicenceFrm").style.display = "none";
-    document.querySelector("#useLicence").onclick = function () {
+    if (document.querySelectorAll("[name=rejectTicket]") != undefined) {
+        document.querySelectorAll("[name=rejectTicket]").forEach(btn => {
+            btn.onclick = function () {
+                if (currentTicket == null) {
+                    alert("no ticket selected");
+                    return;
+                }
+                let line = document.querySelectorAll("tr[ticket='" + currentTicket.idTicket + "'] td")[3];
+                if (currentTicket.states[currentTicket.states.length - 1].Etat_Ticket_idEtatTicket == 1)
+                    changeStateTicket(currentTicket.idTicket, 5, "", function (data) {
+                        if (data == "Ok") {
+                            line.innerText = "Echec";
+                        }
+                    })
+            }
+        });
+    }
+    if (document.querySelector("#useLicenceFrm") != undefined)
+        document.querySelector("#useLicenceFrm").style.display = "none";
+    document.querySelector("#useLicence")?.addEventListener("click", function () {
         if (currentLicence == null) {
             _alert("No Licence selected !");
         }
@@ -184,7 +202,7 @@ window.addEventListener("load", function () {
         let comment = document.querySelector("#comment").value;
         console.log("avant 'useLicence'", paramAttr);
         useLicence(currentLicence, cible, type_cible, action, paramAttr, comment);
-    }
+    });
     document.querySelectorAll("[name=useLicence]").forEach(btn => {
         btn.onclick = function () {
             currentLicence = this.getAttribute("idLicence");
@@ -199,8 +217,14 @@ window.addEventListener("load", function () {
     if (compomentLib.assignAgent != undefined)
         compomentLib.assignAgent.onchange = setAssignAgent;
 
-    if (compomentLib.validTicket != undefined)
-        compomentLib.validTicket.onclick = setValidTicket;
+    if (compomentLib.validTicket != undefined) {
+        console.dir(compomentLib.validTicket);
+        compomentLib.validTicket.forEach(btn => {
+            btn.onclick = function () {
+                setValidTicket();
+            }
+        });
+    }
     compomentLib.updateTicket?.addEventListener("click", function () {
         updateCurrentTicket();
     })
@@ -235,11 +259,30 @@ window.addEventListener("load", function () {
                 const latestState = currentTicket.states?.[currentTicket.states.length - 1];
                 if (latestState?.Etat_Ticket_idEtatTicket === 1) {
                     setUpdateCompoment(["objetTicket", "contentTicket"]);
+                    setUpdateDataTicket();
                 }
             });
         }
     })
 });
+function setUpdateDataTicket() {
+    let c = document.querySelectorAll("[data-ticket='dataTicket'] li span.editable");
+    c.forEach(el => {
+        el.onclick = function () {
+            let input = document.createElement("input");
+            input.type = "text";
+            input.value = this.innerText;
+            input.classList.add("form-control");
+            input.onblur = function () {
+                let newSpan = document.createElement("span");
+                newSpan.innerText = this.value;
+                input.replaceWith(newSpan);
+                setUpdateDataTicket();
+            }
+            this.replaceWith(input);
+        }
+    })
+}
 function renderSection(type, compoment, data) {
     if (!compoment || !data) return;
 
@@ -257,7 +300,7 @@ function renderSection(type, compoment, data) {
     } else if (type === "dataTicket") {
         for (const key in data) {
             const li = document.createElement("li");
-            li.innerHTML = `<span>${key}</span><span>${data[key]}</span>`;
+            li.innerHTML = `<span class='editable'>${key}</span><span class='editable'>${data[key]}</span>`;
             compoment.appendChild(li);
         }
     } else {
@@ -278,7 +321,9 @@ function updateCurrentTicket() {
         console.dir(element.childNodes);
         data[element.childNodes[0].innerText] = element.childNodes[1].innerText
     });
+    console.dir(data);
     currentTicket["dataTicket"] = JSON.stringify(data);
+    console.dir(currentTicket);
     updateTicket(currentTicket, function (data) {
         console.dir(data);
     })

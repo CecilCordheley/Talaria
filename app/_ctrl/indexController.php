@@ -41,8 +41,8 @@ class indexController extends Controller{
        // EasyFrameWork::Debug($this->service);
        $userData=$u[0]->getArray();
        if($u[0]->getLicences(new SQLFactory())){
-       $this->licences=$u[0]->getLicences(new SQLFactory());
-       if($this->licences!=false){
+       $this->licences=$u[0]->getLicences(new SQLFactory())??[];
+       if($this->licences){
         $arr = is_array($this->licences) ? $this->licences : [$this->licences];
         $userData["licences"]=count($arr);
        }else{
@@ -54,7 +54,7 @@ class indexController extends Controller{
         }
     }
     private function setLicenceManager($template){
-        if($this->user->typeAgent!="1"){
+        if($this->user->typeAgent!="1" && isset($this->licences) && $this->licences!=false){
              $licences=is_array($this->licences) ? $this->licences : [$this->licences];
             $i=0;
             $template->setLoop("licences",array_reduce($licences,function($c,$e) use(&$i){
@@ -89,10 +89,10 @@ class indexController extends Controller{
             $car[]=["name"=>$el];
             return $car;
         },[]));
-        $service_parent=$this->service->getChildren(new SQLFactory());
+        $service_parent=isset($this->service)?$this->service->getChildren(new SQLFactory()):false;
         $this->setData("service_parent",$service_parent!=false?"1":"0");
                 //Get user List from service
-                $agents=$this->service->getAgents(new SQLFactory(),$service_parent!=false);
+                $agents=isset($this->service)?$this->service->getAgents(new SQLFactory(),$service_parent!=false):false;
                 if($agents==false){
                     $template->cancelLoop("userList");
                 }else{
@@ -182,10 +182,12 @@ class indexController extends Controller{
             $menu=[
                 "1"=>[
                     ["label"=>"Nouveau Service","action"=>"#","href"=>"newService"],
+                    ["label"=>"Statistiques","action"=>"#","href"=>"Stat"],
                     ["label"=>"Gérer les exception",'action'=>'#','href'=>"Licence"]
                 ],
                 "2"=>[
                     ["label"=>"Importer des agents","action"=>" ","href"=>"importAgent"],
+                    ["label"=>"Exportation","action"=>"export","href"=>"#"],
                     ["label"=>"requalification","action"=>" ","href"=>"requalif.php"],
                      ["label"=>"Licences","action"=>"Licence","href"=>"#"]
                 ],
@@ -219,6 +221,7 @@ class indexController extends Controller{
                 }
             }
            switch($this->user->typeAgent){
+           
             case "2":{
                 //Managers
                 #get Licence Type

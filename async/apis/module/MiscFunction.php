@@ -103,7 +103,8 @@ abstract class MiscFunction{
         $agent[0]->PrenomAgent=$agentData["PRENOM"];
         $agent[0]->mailAgent=$agentData["MAIL"];
         $agent[0]->service=$agentData["SERVICE"];
-        $agent[0]->blockAgent=$agentData["BLOCKAGE"];
+        $agent[0]->blockAgent=$agentData["BLOCKAGE"]=="-"?"":$agentData["BLOCKAGE"];
+      //  EasyFrameWork::Debug($agent[0]);
         if(AgentEntity::update($sqlF,$agent[0])){
             return true;
         }else{
@@ -151,19 +152,19 @@ abstract class MiscFunction{
         $ticket=TicketEntity::getTicketTblBy($sqlF,"idTicket",$id);
         //check state for update
         $states=$ticket->getStates($sqlF);
-        if(end($states)["Etat_Ticket_idEtatTicket"]!=1){
+        if(end($states)["Etat_Ticket_idEtatTicket"]!="1"){
             echo json_encode(["status" => "error", "message" => "update not allowed for this state"]);
             return false;
         }
         $ticket->objetTicket=html_entity_decode($objet);
         $ticket->contentTicket=html_entity_decode($content);
-        $decoded = json_decode($datas, true);
+        $decoded = json_decode($datas,true);
     if (json_last_error() !== JSON_ERROR_NONE) {
         throw new Exception("Le JSON passé dans dataTicket est invalide : " . json_last_error_msg());
     }
     $newData=json_encode($decoded, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     // Étape 2 : Re-encoder proprement en UTF-8
-  //  $ticket->dataTicket = str_replace('"',"\\\"",$newData);
+    $ticket->dataTicket = $newData;
         return TicketEntity::update($sqlF,$ticket);
     }
     /**

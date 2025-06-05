@@ -14,7 +14,7 @@ function getLicenceActionByType(cat,callBack){
        callBack.call(this,a);
     })
 }
-function setEditableField(fiedls, editableObj = "agent") {
+function setEditableField(fiedls, editableObj = "agent",createSelectCompoment) {
     if (editableObj == "agent")
         if (currentAgent == null) {
             console.error("No agent selected !");
@@ -26,6 +26,7 @@ function setEditableField(fiedls, editableObj = "agent") {
 
             let data = editableObj == "agent" ? f.getAttribute("data-agent") : f.getAttribute("data-service");
             const tag = f.tagName;
+            console.log(data);
             if (data == "service") {
                 getServices((servData) => {
                     let servArr = servData.reduce((car, serv) => {
@@ -48,6 +49,7 @@ function setEditableField(fiedls, editableObj = "agent") {
             } else {
                 let input = null;
                 if (tag === "SPAN" || tag == "B") {
+                    
                     input = document.createElement("input");
                     if (tag == "SPAN") {
                         input.type = "text";
