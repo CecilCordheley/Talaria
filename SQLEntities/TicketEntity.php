@@ -6,6 +6,7 @@ use SQLEntities\TicketHasEtatEntity;
 use SQLEntities\TypeTicket;
 use vendor\easyFrameWork\Core\Main;
 use Exception;
+use InvalidArgumentException;
 use vendor\easyFrameWork\Core\Master\EasyFrameWork;
 
 /**
@@ -44,6 +45,40 @@ class TicketEntity extends TicketTbl
     }
     
   }
+  public static function getBnTicketWithStat(SQLFactory $sqlf,string $groupBy="service"){
+    switch($groupBy){
+      case "service":{
+        return $sqlf->execQuery("SELECT s.libService AS label, e.libEtatTicket AS etat, COUNT(*) AS total 
+        FROM ticket_tbl t JOIN service s ON s.idService = t.service 
+        JOIN ( SELECT t1.ticket_tbl_idTicket, t1.Etat_Ticket_idEtatTicket 
+        FROM ticket_has_etat t1 
+        JOIN ( SELECT ticket_tbl_idTicket, MAX(dateEtat) 
+        as maxDate FROM ticket_has_etat GROUP BY ticket_tbl_idTicket ) t2 
+        ON t1.ticket_tbl_idTicket = t2.ticket_tbl_idTicket AND t1.dateEtat = t2.maxDate ) last_etat ON t.idTicket = last_etat.ticket_tbl_idTicket JOIN etat_ticket e ON e.idEtatTicket = last_etat.Etat_Ticket_idEtatTicket GROUP BY s.idService, e.idEtatTicket;");
+      }
+    }
+  }
+  public static function getNbTicket(SQLFactory $sqlF,string $groupBy=""){
+    
+    if($groupBy!=""){
+      switch ($groupBy){
+        case "type":
+          return $sqlF->execQuery("SELECT t1.libTypeTicket as label, COUNT(t2.idTicket) as total FROM type_ticket t1 LEFT JOIN ticket_tbl t2 on t2.typeTicket=t1.idTypeTicket GROUP BY t1.idTypeTicket;");
+        case "state":
+          return $sqlF->execQuery("SELECT e.libEtatTicket AS label, COUNT(t.ticket_tbl_idTicket) AS total FROM ( SELECT ticket_tbl_idTicket, MAX(dateEtat) AS maxDate FROM ticket_has_etat GROUP BY ticket_tbl_idTicket ) last_etat JOIN ticket_has_etat t ON t.ticket_tbl_idTicket = last_etat.ticket_tbl_idTicket AND t.dateEtat = last_etat.maxDate RIGHT JOIN etat_ticket e ON e.idEtatTicket = t.Etat_Ticket_idEtatTicket GROUP BY e.idEtatTicket;");
+        case "agent":{
+          return $sqlF->execQuery("SELECT refAgent as label, COUNT(t.idTicket) as total FROM agent_tbl a  LEFT JOIN ticket_tbl t on t.auteur=a.idAgent GROUP BY a.idAgent");
+        }
+        case "service":{
+          return $sqlF->execQuery("SELECT s.refService AS label, COUNT(t.idTicket) AS total FROM service s LEFT JOIN ticket_tbl t ON t.service = s.idService GROUP BY s.idService");
+        }
+        default:
+  throw new InvalidArgumentException("Critère de groupement invalide : $groupBy");
+      }
+      
+    }
+    return $sqlF->execFnc("TotalTicket",[])[0]["TotalTicket"];
+  }
   public function changeState(SQLFactory $sqlF, int $state,string $comment=""){
     date_default_timezone_set('Europe/Paris');
     $tcktHasEtat=new TicketHasEtatEntity;
@@ -81,6 +116,9 @@ class TicketEntity extends TicketTbl
       }else
         $a=$state;
         $i=0;
+      usort($a,function($a,$b){
+        return Main::DateCompare($a->dateEtat,$b->dateEtat);
+      });
     return array_reduce($a,function($carry,$el) use(&$i,$sqlF){
       $carry[$i]=$el->getArray();
       $carry[$i]["libEtat"]=Main::utf8ize(EtatTicket::getEtatTicketBy($sqlF,"idEtatTicket",$el->Etat_Ticket_idEtatTicket)->libEtatTicket);

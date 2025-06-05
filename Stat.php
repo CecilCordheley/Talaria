@@ -10,9 +10,6 @@ use vendor\easyFrameWork\Core\Master\Autoloader;
 EasyFrameWork::INIT("./vendor/easyFrameWork/Core/config/config.json");
 Autoloader::register();
 $router = new Router();
-$router->addRoute('connexion', 'rootController');
-$router->addRoute('deconnexion', 'rootController');
-$router->addRoute('firstConnexion', 'rootController');
-$router->addRoute('updatePassword', 'rootController');
-$router->addRoute('importAgent', 'rootController');
+//Ici Insérez les routes
+$router->addRoute('Stat', 'StatController');
 $router->route($_SERVER["REQUEST_URI"],["year"=>date("Y")]);

@@ -35,7 +35,8 @@ use Exception;
     }
     }
     public static function  update(SQLFactory $sqlF,AgentTbl $item,$callBack=null){
-      $return=$sqlF->updateItem($item->getArray(),"agent_tbl");
+      $table="agent_tbl";
+      $return=$sqlF->updateItem($item->getArray(),$table);
       if (gettype($return) === "string" && strpos($return, "Error") !== -1) {
         echo "<pre>$return</pre>";
         return false;

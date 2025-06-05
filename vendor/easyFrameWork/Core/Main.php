@@ -93,6 +93,50 @@ use DateTime;
             }
             return $mixed;
         }
+        public static function exportCsv(array $rows, string $filename, string $separator = ";") {
+    $filepath = "$filename.csv";
+    $fp = fopen($filepath, 'w');
+
+    // Écriture des lignes
+    foreach ($rows as $row) {
+        // Si on reçoit un objet, on le convertit en tableau
+        if (is_object($row)) {
+            $row = (array)$row;
+        }
+
+        // Conversion en chaîne CSV
+        fputcsv($fp, $row, $separator);
+    }
+
+    fclose($fp);
+
+    // Headers pour le téléchargement
+    header('Content-Description: File Transfer');
+    header('Content-Type: application/octet-stream');
+    header('Content-Disposition: attachment; filename="' . basename($filepath) . '"');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate');
+    header('Pragma: public');
+    header('Content-Length: ' . filesize($filepath));
+    readfile($filepath);
+    unlink($filepath);
+    exit();
+}
+
+        public static function export($content,$file){
+            file_put_contents("$file.csv", $content);
+
+header('Content-Description: File Transfer');
+header('Content-Type: application/octet-stream');
+header('Content-Disposition: attachment; filename="' . basename("$file.csv") . '"');
+header('Expires: 0');
+header('Cache-Control: must-revalidate');
+header('Pragma: public');
+header('Content-Length: ' . filesize("$file.csv"));
+readfile("$file.csv");
+unlink("$file.csv");
+exit();
+        }
         /**
          * Modifie le template pour ajouter une alert _alert et redirige vers la page indiquée
          * @param EasyTemplate $template

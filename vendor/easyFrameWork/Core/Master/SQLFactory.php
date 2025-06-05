@@ -255,7 +255,7 @@ class SQLFactory
         }
 
         $id = $item[$f];
-  //     echo "UPDATE $table SET " . implode(",", $u) . " WHERE $f=$id";
+   //    echo "UPDATE $table SET " . implode(",", $u) . " WHERE $f=$id";
         return $this->execQuery("UPDATE $table SET " . implode(",", $u) . " WHERE $f=$id");
         
     }
@@ -278,7 +278,10 @@ class SQLFactory
     public function execFnc($fncName, $args)
     {
         //  echo "SELECT `fncName`(".$args[0]["value"].") AS `$fncName`;";
-        return $this->execQuery("SELECT `$fncName`(" . $args[0]["value"] . ") AS `$fncName`;");
+        if(count($args))
+         return $this->execQuery("SELECT `$fncName`(" . $args[0]["value"] . ") AS `$fncName`;");
+        else
+            return $this->execQuery("SELECT `$fncName`() AS `$fncName`;");
     }
     /**
      * Retourne toute les tables du schema courant

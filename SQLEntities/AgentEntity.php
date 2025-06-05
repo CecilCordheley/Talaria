@@ -24,6 +24,10 @@ class AgentEntity extends AgentTbl
   public function getService($sqlF){
     return ServiceEntity::getServiceBy($sqlF,"idService",$this->service);
   }
+  /**
+   * Ticket émanant de l'agent
+   * @param SQLFactory $sqlF
+   */
   public function getTicket($sqlF){
     return TicketEntity::getTicketTblBy($sqlF,"auteur",$this->idAgent);
   }

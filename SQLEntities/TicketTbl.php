@@ -21,7 +21,7 @@ use Exception;
          throw new Exception("Propriété non définie : $name");
      }
     }
-    public static function  add(SQLFactory $sqlF,TicketTbl &$item,$callBack=null){
+    public static function  add(SQLFactory $sqlF,TicketTbl &$item,$callBack=null,$debug=false){
      $return= $sqlF->addItem($item->getArray(),"ticket_tbl");
     if (gettype($return) === "string" && strpos($return, "Error") !== -1) {
       echo "<pre>$return</pre>";
